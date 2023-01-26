@@ -12,12 +12,17 @@
 
 .post_count{
     font-weight: bold;
+    margin-right: 10px;
 }
 .followers_count{
     margin-left: 20px;
+    font-weight: bold;
+    margin-right: 10px;
 }
 .following_count {
     margin-left: 20px;
+    font-weight: bold;
+    margin-right: 10px;
 }
 .analytics{
     display: flex;

@@ -1,12 +1,21 @@
 const mongoose = require("mongoose");
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 
 const userSchema = mongoose.Schema(
   {
     fname: { type: "String", required: true },
     lname: { type: "String", required: true },
     email: { type: "String", required: true },
+    userName: { type: "String", required: true,  default:"user_123" },
     password: { type: "String", required: true },
+    followers: { type: "String", required: true, default: "0" },
+    following: { type: "String", required: true, default: "0" },
+    postsCount: { type: "String", required: true, default: "0" },
+    about: {
+      type: "String",
+      required: true,
+      default: "Edit profile and Create a bio",
+    },
     pic: {
       type: "String",
       require: true,
@@ -31,8 +40,6 @@ userSchema.pre("save", async function (next) {
     this.password = await bcrypt.hash(this.password, salt);
   }
 });
-
-
 
 const User = mongoose.model("User", userSchema);
 

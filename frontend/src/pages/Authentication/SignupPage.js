@@ -31,6 +31,7 @@ export default function SignupPage() {
   const [confirmPassword, setConfirmPassword] = useState();
   const [passwordType, setPasswordType] = useState("password");
   const [confirmPasswordType, setConfirmPasswordType] = useState("password");
+  const [userName ,setUserName] = useState();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -64,6 +65,16 @@ export default function SignupPage() {
       Swal.fire({
         title: "Error!",
         text: "Please enter valid email !!!",
+        icon: "error",
+        confirmButtonText: "Ok",
+        confirmButtonColor: "red",
+      });
+      isSuccess = false;
+    }
+    if (!userName) {
+      Swal.fire({
+        title: "Error!",
+        text: "Please enter user name !!!",
         icon: "error",
         confirmButtonText: "Ok",
         confirmButtonColor: "red",
@@ -113,6 +124,7 @@ export default function SignupPage() {
             fname,
             lname,
             email,
+            userName,
             password,
           },
 
@@ -231,6 +243,18 @@ export default function SignupPage() {
                     name="email"
                     autoComplete="email"
                     onChange={(e) => setEmail(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    autoComplete="given-name"
+                    name="userName"
+                    required
+                    fullWidth
+                    id="userName"
+                    label="User Name"
+                    autoFocus
+                    onChange={(e) => setUserName(e.target.value)}
                   />
                 </Grid>
                 <Grid item xs={12}>
