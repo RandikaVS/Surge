@@ -17,13 +17,11 @@ import axios from "axios";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
-
 const theme = createTheme();
 
 function LoginPage() {
-
   const [email, setEmail] = useState();
-  const [password,setPassword] = useState();
+  const [password, setPassword] = useState();
   const [passwordType, setPasswordType] = useState("password");
 
   const history = useHistory();
@@ -74,6 +72,7 @@ function LoginPage() {
         console.log(data);
 
         localStorage.setItem("userInfo", JSON.stringify(data));
+        console.log(data.token);
 
         Swal.fire({
           title: "success",
@@ -95,7 +94,6 @@ function LoginPage() {
         console.log(error.response);
       }
     }
-
   };
 
   const togglePassword = () => {
