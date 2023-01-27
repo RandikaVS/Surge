@@ -15,6 +15,9 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { styled } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
 import CreatePost from './CreatePost';
+import Swal from 'sweetalert2';
+import { useHistory } from "react-router-dom";
+
 
 
 
@@ -29,6 +32,7 @@ function SideMenu(props) {
       JSON.parse(localStorage.getItem("userInfo"))
     );
     const [open, setOpen] = useState(false);
+    const history = useHistory();
 
     const handleOpen = () => {
       setOpen(true);
@@ -88,6 +92,45 @@ function SideMenu(props) {
         },
       },
     }));
+
+    const logOutSession = ()=>{
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You need to login again with credentials",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Logout !",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          let timerInterval;
+          Swal.fire({
+            title: "Please wait!",
+            html: "Loggin out....",
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: () => {
+              Swal.showLoading();
+              const b = Swal.getHtmlContainer().querySelector("b");
+              timerInterval = setInterval(() => {
+                b.textContent = Swal.getTimerLeft();
+              }, 100);
+            },
+            willClose: () => {
+              clearInterval(timerInterval);
+            },
+          }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+              localStorage.removeItem("userInfo");
+              history.push("/");
+            }
+          });
+        }
+      });
+      
+    }
     
 
     
@@ -195,7 +238,7 @@ function SideMenu(props) {
             </MenuItem>
           </Link>
           <br></br>
-          <MenuItem className="create">
+          <MenuItem className="create" onClick={logOutSession}>
             <div className="menu_item">
               <LogoutIcon fontSize="large" sx={{ color: "red" }} />
               <div className="menu_text">Logout</div>

@@ -66,7 +66,7 @@ const addPost = asyncHandler(async (req, res) => {
 });
 
 const getAllPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find({});
+  const posts = await Post.find().sort({ timeCreated: -1, likes: -1 });;
 
   if (posts) {
     console.log("Posts fetched!!!".green.bold);

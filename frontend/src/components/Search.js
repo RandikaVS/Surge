@@ -12,12 +12,12 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
-import { UserState } from './../context/UserProvider';
+import { UserState } from "./../context/UserProvider";
 
 function Search() {
   const [search, setSearch] = useState(null);
   const [searchResult, setSearchResult] = useState([]);
-  const { SelectedUser,setSelectedUser } = UserState();
+  const { SelectedUser, setSelectedUser } = UserState();
 
   const [loginData, setLoginData] = useState(
     JSON.parse(localStorage.getItem("userInfo"))

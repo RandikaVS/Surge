@@ -162,6 +162,7 @@ const updateUser = asyncHandler(async (req, res) => {
       postsCount: updateUser.postsCount,
       pic: updateUser.pic,
       about: updateUser.about,
+      token: genarateToken(updateUser._id),
     });
 
     console.log(updateUser);
