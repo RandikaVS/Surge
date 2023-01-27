@@ -18,6 +18,10 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
+import ReCAPTCHA from "react-google-recaptcha";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
 
 const theme = createTheme();
 
@@ -25,6 +29,9 @@ function LoginPage() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [showPassword, setShowPassword] = useState(false);
+  const[capcha, setCapcha] = useState(false);
+   const [open, setOpen] = useState(false);
+
 
   const history = useHistory();
 
@@ -34,10 +41,26 @@ function LoginPage() {
     event.preventDefault();
   };
 
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   const handleSubmit = async (event) => {
     var isSuccess = true;
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+
+    if(!capcha){
+      setOpen(true);
+    }
 
     if (!validator.isEmail(data.get("email"))) {
       isSuccess = false;
@@ -61,7 +84,7 @@ function LoginPage() {
       });
     }
 
-    if (isSuccess) {
+    if (isSuccess && capcha) {
       try {
         const config = {
           headers: {
@@ -130,6 +153,15 @@ function LoginPage() {
             backgroundPosition: "center",
           }}
         >
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              Re-capcha failed!!!
+            </Alert>
+          </Snackbar>
           <Box
             sx={{
               my: 8,
@@ -163,7 +195,6 @@ function LoginPage() {
                 autoFocus
                 onChange={(e) => setEmail(e.target.value)}
               />
-
               <TextField
                 sx={{ width: "100%", marginTop: "40px" }}
                 type={showPassword ? "text" : "password"}
@@ -186,12 +217,16 @@ function LoginPage() {
                   ),
                 }}
               />
-
+              <ReCAPTCHA
+                sitekey="6Le_xTAkAAAAAMO9nWeylTQma2TBlFrUzDb9GXmw"
+                style={{ marginTop: "20px" }}
+                onChange={(e) => setCapcha(true)}
+              />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 5, mb: 2 }}
+                sx={{ mt: 3, mb: 2 }}
               >
                 Sign In
               </Button>
