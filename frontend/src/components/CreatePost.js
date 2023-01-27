@@ -26,21 +26,6 @@ function CreatePost(props) {
     JSON.parse(localStorage.getItem("userInfo"))
   );
   const fileInput = React.useRef();
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "1px solid #dfdfdf",
-    boxShadow: 24,
-    borderRadius: "16px",
-    p: 4,
-    minHeight: "60vh",
-    minWidth: "25vw",
-  };
-
   const [prePost, setPrePost] = useState("block");
   const [postContent, setPostContent] = useState("none");
   const [image, setImage] = useState();
@@ -56,6 +41,22 @@ function CreatePost(props) {
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [failOpen, setFailOpen] = React.useState(false);
   const date = new Date();
+
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "1px solid #dfdfdf",
+    boxShadow: 24,
+    borderRadius: "16px",
+    p: 4,
+    minHeight: "60vh",
+    minWidth: "25vw",
+  };
 
 
   const handleClose = (event, reason) => {
@@ -122,6 +123,14 @@ function CreatePost(props) {
   const postImage = async(event) => {
     setPostBtnDisplay('none');
     setLoadingDisplay('block');
+    console.log(
+      userId,
+      userName,
+      image,
+      userPic,
+      caption,
+      timeCreated
+    );
     try {
         const config = {
         headers: {

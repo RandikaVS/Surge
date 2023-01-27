@@ -8,9 +8,9 @@ const userSchema = mongoose.Schema(
     email: { type: "String", required: true },
     userName: { type: "String", required: true, default: "user_123" },
     password: { type: "String", required: true },
-    followers: { type: "String", required: true, default: "0" },
-    following: { type: "String", required: true, default: "0" },
-    postsCount: { type: "String", required: true, default: "0" },
+    followers: { type: "number", required: true, default: 0 },
+    following: { type: "number", required: true, default: 0 },
+    postsCount: { type: "number", required: true, default: 0 },
     about: {
       type: "String",
       required: true,
