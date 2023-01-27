@@ -1,6 +1,6 @@
 .post_container{
     width: 615px;
-    border: 1px solid #dbdbdb;
+    border: none;
     background-color: white;
     margin-top: 25px;
 }
@@ -19,13 +19,21 @@
 }
 .post_username{
     font-weight: bold;
-    margin-top: 20px;
+    margin-top: 10px;
 }
-
+.post_date{
+    display: flex;
+    max-width: 82px;
+    overflow-x: hidden;
+}
+.userDetails{
+    display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+}
 .post_react_image{
-    width: 25px;
-    margin: 5px;
-    margin-right: 20px;
+    width: 40px;
+    margin-right: 5px;
 }
 
 .optins_container{

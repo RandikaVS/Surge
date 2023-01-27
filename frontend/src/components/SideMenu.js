@@ -14,6 +14,7 @@ import { useState } from 'react';
 import LogoutIcon from "@mui/icons-material/Logout";
 import { styled } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
+import CreatePost from './CreatePost';
 
 
 
@@ -24,6 +25,19 @@ function SideMenu(props) {
     const [message, setMessage] = useState();
     const [create, setCreate] = useState();
     const [profile, setProfile] = useState();
+    const [user, setUser] = useState(
+      JSON.parse(localStorage.getItem("userInfo"))
+    );
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => {
+      setOpen(true);
+      props.data = "create";
+    };
+
+    const handleClose = () => {
+      setOpen(false);
+    };
 
     useEffect(() => {
         if (props.data === "profile") {
@@ -92,14 +106,14 @@ function SideMenu(props) {
         <Avatar
           alt="Profile"
           fontSize="large"
-          src="https://res.cloudinary.com/cake-lounge/image/upload/v1674555614/219983_fbpdqr.png"
-          sx={{width:80, height:80}}
+          src={user.pic}
+          sx={{ width: 80, height: 80 }}
         />
       </StyledBadge>
 
-      <div className="profile_name">Full Name</div>
+      <div className="profile_name">{user.fname +" "+ user.lname}</div>
       <br></br>
-      <div className="profile_username">User Name</div>
+      <div className="profile_username">{user.userName}</div>
 
       <Box
         sx={{ width: 420, maxWidth: "100%", marginTop: "20px", border: "none" }}
@@ -148,16 +162,20 @@ function SideMenu(props) {
           </Link>
 
           <Link
-            href="/create"
             variant="body2"
             sx={{ textDecoration: "none", color: "inherit" }}
           >
-            <MenuItem className="create" sx={{ backgroundColor: create }}>
+            <MenuItem
+              className="create"
+              sx={{ backgroundColor: create }}
+              onClick={handleOpen}
+            >
               <div className="menu_item">
                 <AddCircleOutlineOutlinedIcon fontSize="large" />
                 <div className="menu_text">Create</div>
               </div>
             </MenuItem>
+            <CreatePost open={open} onClose={handleClose} />
           </Link>
 
           <Link
@@ -167,10 +185,7 @@ function SideMenu(props) {
           >
             <MenuItem className="profile" sx={{ fontWeight: profile }}>
               <div className="menu_item">
-                <Avatar
-                  fontSize="small"
-                  src="https://res.cloudinary.com/cake-lounge/image/upload/v1674555614/219983_fbpdqr.png"
-                />
+                <Avatar fontSize="small" src={user.pic} />
                 <div className="menu_text">Profile</div>
               </div>
             </MenuItem>

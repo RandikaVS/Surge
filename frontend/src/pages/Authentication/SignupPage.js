@@ -31,7 +31,7 @@ export default function SignupPage() {
   const [confirmPassword, setConfirmPassword] = useState();
   const [passwordType, setPasswordType] = useState("password");
   const [confirmPasswordType, setConfirmPasswordType] = useState("password");
-  const [userName ,setUserName] = useState();
+  const [userName, setUserName] = useState();
 
   const handleSubmit = async (event) => {
     event.preventDefault();

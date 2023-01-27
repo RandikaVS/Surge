@@ -6,7 +6,7 @@ const userSchema = mongoose.Schema(
     fname: { type: "String", required: true },
     lname: { type: "String", required: true },
     email: { type: "String", required: true },
-    userName: { type: "String", required: true,  default:"user_123" },
+    userName: { type: "String", required: true, default: "user_123" },
     password: { type: "String", required: true },
     followers: { type: "String", required: true, default: "0" },
     following: { type: "String", required: true, default: "0" },
@@ -14,7 +14,7 @@ const userSchema = mongoose.Schema(
     about: {
       type: "String",
       required: true,
-      default: "Edit profile and Create a bio",
+      default: "Bio",
     },
     pic: {
       type: "String",

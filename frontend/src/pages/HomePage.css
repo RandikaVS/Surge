@@ -4,5 +4,8 @@ body{
 
 .main_content{
     overflow-y: scroll;
+    scrollbar-width: none;
+    max-height: 95vh;
+    scroll-behavior: smooth;
     background-color:#fafafa;
 }

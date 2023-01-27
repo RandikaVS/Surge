@@ -4,6 +4,7 @@ import Feed from '../components/Feed'
 import SideMenu from '../components/SideMenu'
 import StatusBar from '../components/StatusBar'
 import "./HomePage.css"
+import Search from './../components/Search';
 
 const HomePage = () => {
 
@@ -14,6 +15,7 @@ const HomePage = () => {
           <SideMenu data={"home"} />
         </Grid>
         <Grid item xs={6} sm={6} md={6} className="main_content">
+          <Search/>
           <StatusBar />
           <Feed />
         </Grid>

@@ -13,14 +13,14 @@ const protect = asyncHandler(async (req, res, next) => {
       token = req.headers.authorization.split(" ")[1];
 
       //decodes token id
-      const decoded = jwt.verify(token, "Sahan");
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       req.user = await User.findById(decoded.id).select("-password");
 
       next();
     } catch (error) {
       res.status(401).json({
-        error:"Your're Not authoruized to the access content"
+        error:"Your're Not authoruized to the access this"
       });
       throw new Error("Not authorized, token failed");
     }
