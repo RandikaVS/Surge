@@ -1,78 +1,51 @@
-import React, { useState } from "react";
-import { alpha } from "@mui/material/styles";
-import { styled } from "@mui/material/styles";
+import React, { useState, useEffect } from "react";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import FixedSizeList from "react-window";
 import Box from "@mui/material/Box";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Avatar from "@mui/material/Avatar";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemButton from "@mui/material/ListItemButton";
+import { UserState } from './../context/UserProvider';
 
 function Search() {
-  const [search, setSearch] = useState();
+  const [search, setSearch] = useState(null);
   const [searchResult, setSearchResult] = useState([]);
+  const { SelectedUser,setSelectedUser } = UserState();
 
   const [loginData, setLoginData] = useState(
     JSON.parse(localStorage.getItem("userInfo"))
   );
 
-  const Search = styled("div")(({ theme }) => ({
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(3),
-      width: "auto",
-    },
-  }));
-  const SearchIconWrapper = styled("div")(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }));
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: "inherit",
-    "& .MuiInputBase-input": {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create("width"),
-      width: "100%",
-      [theme.breakpoints.up("md")]: {
-        width: "20ch",
-      },
-    },
-  }));
+  useEffect(() => {
+    handleSearch();
+  }, [search]);
 
   const handleSearch = async (event) => {
-    // try {
-    //   const config = {
-    //     headers: {
-    //       Authorization: `Bearer ${loginData.token}`,
-    //     },
-    //   };
-
-    //   const { data } = await axios.get(
-    //     `/api/product/searches?search=${search}`,
-    //     config
-    //   );
-    //   //console.log(data)
-    //   setSearchResult(data);
-    // } catch (error) {
-    //   window.alert("Failed to Load the Search Results");
-    // }
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${loginData.token}`,
+        },
+      };
+      const { data } = await axios.get(
+        `/api/user/searchUser?search=${search}`,
+        config
+      );
+      setSearchResult(data);
+      console.log(searchResult);
+    } catch (error) {
+      window.alert("Failed to Load the Search Results");
+    }
+  };
+  const userPage = (user) => {
+    setSelectedUser(user);
   };
   return (
     <div>
@@ -92,30 +65,66 @@ function Search() {
           sx={{ ml: 1, flex: 1 }}
           placeholder="Search... "
           inputProps={{ "aria-label": "search users" }}
+          onChange={(e) => setSearch(e.target.value)}
         />
         <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
           <SearchIcon />
         </IconButton>
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
       </Paper>
-      <Box
-        sx={{
-          width: "100%",
-          height: 400,
-          maxWidth: 360,
-          bgcolor: "background.paper",
-        }}
-      >
-        <FixedSizeList
-          height={400}
-          width={360}
-          itemSize={46}
-          itemCount={200}
-          overscanCount={5}
-        >
-          {}
-        </FixedSizeList>
-      </Box>
+
+      {search ? (
+        <div>
+          <Box
+            sx={{
+              width: "100%",
+              maxHeight: 400,
+              maxWidth: 460,
+              bgcolor: "background.paper",
+              marginLeft: "80px",
+              marginTop: "4px",
+            }}
+          >
+            {searchResult ? (
+              <div>
+                {searchResult.map((user) => (
+                  <ListItemButton>
+                    <List
+                      sx={{
+                        width: "100%",
+                        maxWidth: 400,
+                        bgcolor: "background.paper",
+                      }}
+                    >
+                      <ListItem
+                        alignItems="flex-start"
+                        sx={{ marginLeft: "20px" }}
+                        onClick={(e) => userPage(user)}
+                        key={user._id}
+                      >
+                        <ListItemAvatar>
+                          <Avatar alt="S" src={user.pic} />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={user.fname + " " + user.lname}
+                          secondary={user.userName}
+                          sx={{ marginTop: "5px" }}
+                        />
+                      </ListItem>
+
+                      <Divider variant="middle" sx={{ width: "100%" }} />
+                    </List>
+                  </ListItemButton>
+                ))}
+              </div>
+            ) : (
+              <div>Loading...</div>
+            )}
+          </Box>
+        </div>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 }

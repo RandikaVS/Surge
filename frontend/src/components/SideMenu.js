@@ -111,7 +111,7 @@ function SideMenu(props) {
         />
       </StyledBadge>
 
-      <div className="profile_name">{user.fname +" "+ user.lname}</div>
+      <div className="profile_name">{user.fname + " " + user.lname}</div>
       <br></br>
       <div className="profile_username">{user.userName}</div>
 
@@ -142,7 +142,9 @@ function SideMenu(props) {
               sx={{ backgroundColor: notification }}
             >
               <div className="menu_item">
-                <FavoriteBorderIcon fontSize="large" />
+                <Badge badgeContent={4} color="error">
+                  <FavoriteBorderIcon fontSize="large" />
+                </Badge>
                 <div className="menu_text">Notifications</div>
               </div>
             </MenuItem>
@@ -155,7 +157,9 @@ function SideMenu(props) {
           >
             <MenuItem className="messages" sx={{ backgroundColor: message }}>
               <div className="menu_item">
-                <MarkChatUnreadOutlinedIcon fontSize="large" />
+                <Badge badgeContent={2} color="error">
+                  <MarkChatUnreadOutlinedIcon fontSize="large" />
+                </Badge>
                 <div className="menu_text">Messages</div>
               </div>
             </MenuItem>

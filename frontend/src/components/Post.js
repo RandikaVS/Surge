@@ -113,7 +113,16 @@ useEffect(() => {
           <div
             style={{ fontWeight: "bold", display: "flex", marginLeft: "35px" }}
           >
-            {likes} Likes
+            {likes}{" "}
+            <div
+              style={{
+                fontWeight:'lighter',
+                display: "flex",
+                marginLeft: "5px",
+              }}
+            >
+              Likes
+            </div>
           </div>
           <div
             style={{

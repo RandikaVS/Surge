@@ -14,17 +14,25 @@ import validator from "validator";
 import Swal from "sweetalert2";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
 
 const theme = createTheme();
 
 function LoginPage() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const [passwordType, setPasswordType] = useState("password");
+  const [showPassword, setShowPassword] = useState(false);
 
   const history = useHistory();
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const handleSubmit = async (event) => {
     var isSuccess = true;
@@ -75,10 +83,11 @@ function LoginPage() {
         console.log(data.token);
 
         Swal.fire({
-          title: "success",
-          text: "Login Success",
+          position: "top-end",
           icon: "success",
-          confirmButtonText: "Close",
+          title: "Login success",
+          showConfirmButton: false,
+          timer: 1500,
         });
 
         history.push("/home");
@@ -96,13 +105,6 @@ function LoginPage() {
     }
   };
 
-  const togglePassword = () => {
-    if (passwordType === "password") {
-      setPasswordType("text");
-      return;
-    }
-    setPasswordType("password");
-  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -157,31 +159,39 @@ function LoginPage() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                variant="standard"
                 autoFocus
                 onChange={(e) => setEmail(e.target.value)}
               />
+
               <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type={passwordType}
+                sx={{ width: "100%", marginTop: "40px" }}
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
                 id="password"
-                autoComplete="current-password"
+                name="password"
+                variant="standard"
                 onChange={(e) => setPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
-              {passwordType === "password" ? (
-                <VisibilityOffIcon onClick={togglePassword} />
-              ) : (
-                <VisibilityIcon onClick={togglePassword} />
-              )}
 
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 5, mb: 2 }}
               >
                 Sign In
               </Button>

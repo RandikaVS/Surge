@@ -3,8 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -16,8 +14,10 @@ import validator from "validator";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
 
 const theme = createTheme();
 
@@ -29,9 +29,14 @@ export default function SignupPage() {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
-  const [passwordType, setPasswordType] = useState("password");
-  const [confirmPasswordType, setConfirmPasswordType] = useState("password");
   const [userName, setUserName] = useState();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -156,22 +161,6 @@ export default function SignupPage() {
     }
   };
 
-  const togglePassword = () => {
-    if (passwordType === "password") {
-      setPasswordType("text");
-      return;
-    }
-    setPasswordType("password");
-  };
-
-  const toggleConfirmPassword = () => {
-    if (confirmPasswordType === "password") {
-      setConfirmPasswordType("text");
-      return;
-    }
-    setConfirmPasswordType("password");
-  };
-
   return (
     <Box
       sx={{
@@ -215,6 +204,7 @@ export default function SignupPage() {
                   <TextField
                     autoComplete="given-name"
                     name="firstName"
+                    variant="standard"
                     required
                     fullWidth
                     id="firstName"
@@ -230,6 +220,7 @@ export default function SignupPage() {
                     id="lastName"
                     label="Last Name"
                     name="lastName"
+                    variant="standard"
                     autoComplete="family-name"
                     onChange={(e) => setLname(e.target.value)}
                   />
@@ -240,18 +231,20 @@ export default function SignupPage() {
                     fullWidth
                     id="email"
                     label="Email Address"
+                    variant="standard"
                     name="email"
                     autoComplete="email"
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                   <TextField
                     autoComplete="given-name"
                     name="userName"
                     required
                     fullWidth
                     id="userName"
+                    variant="standard"
                     label="User Name"
                     autoFocus
                     onChange={(e) => setUserName(e.target.value)}
@@ -259,38 +252,52 @@ export default function SignupPage() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
+                    sx={{ width: "100%", marginTop: "40px" }}
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
                     id="password"
-                    autoComplete="new-password"
-                    type={passwordType}
+                    name="password"
+                    variant="standard"
                     onChange={(e) => setPassword(e.target.value)}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
-                  {passwordType === "password" ? (
-                    <VisibilityOffIcon onClick={togglePassword} />
-                  ) : (
-                    <VisibilityIcon onClick={togglePassword} />
-                  )}
                 </Grid>
 
                 <Grid item xs={12}>
                   <TextField
-                    required
-                    fullWidth
-                    name="confirmPassword"
-                    label="Re-Enter Password"
-                    id="confirmPassword"
-                    autoComplete="new-password"
+                    sx={{ width: "100%", marginTop: "40px" }}
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    id="password"
+                    name="password"
+                    variant="standard"
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    type={confirmPasswordType}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
-                  {confirmPasswordType === "password" ? (
-                    <VisibilityOffIcon onClick={toggleConfirmPassword} />
-                  ) : (
-                    <VisibilityIcon onClick={toggleConfirmPassword} />
-                  )}
                 </Grid>
               </Grid>
               <Button

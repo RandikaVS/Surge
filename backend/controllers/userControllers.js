@@ -79,12 +79,12 @@ const authUser = asyncHandler(async (req, res) => {
       fname: user.fname,
       lname: user.lname,
       email: user.email,
-      followers:user.followers,
-      following:user.following,
-      postsCount:user.postsCount,
+      followers: user.followers,
+      following: user.following,
+      postsCount: user.postsCount,
       pic: user.pic,
       about: user.about,
-      userName:user.userName,
+      userName: user.userName,
       token: genarateToken(user._id),
     });
   } else {
@@ -126,7 +126,6 @@ const getSingleUser = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-
   const { fname, lname, email, _id, pic, about } = req.body;
 
   if (!fname || !lname || !email || !_id) {
@@ -136,57 +135,54 @@ const updateUser = asyncHandler(async (req, res) => {
     throw new error("Please enter all the fields!!!");
   }
 
-  
-    const updateUser = await User.findByIdAndUpdate(
-      _id,
-      {
-        fname: fname,
-        lname: lname,
-        email: email,
-        pic: pic,
-        about: about,
-      },
-      {
-        new: true,
-      }
-    );
-
-    if (updateUser) {
-      console.log("Updated!!!".green.bold);
-      res.status(201).json({
-        _id: updateUser._id,
-        fname: updateUser.fname,
-        lname: updateUser.lname,
-        email: updateUser.email,
-        userName: updateUser.userName,
-        followers: updateUser.followers,
-        following: updateUser.following,
-        postsCount: updateUser.postsCount,
-        pic: updateUser.pic,
-        about: updateUser.about,
-      });
-
-      console.log(updateUser);
-    } else {
-      res.status(400).json({
-        error: "Update Failed",
-      });
-      throw new error("User not updated !!!");
+  const updateUser = await User.findByIdAndUpdate(
+    _id,
+    {
+      fname: fname,
+      lname: lname,
+      email: email,
+      pic: pic,
+      about: about,
+    },
+    {
+      new: true,
     }
+  );
+
+  if (updateUser) {
+    console.log("Updated!!!".green.bold);
+    res.status(201).json({
+      _id: updateUser._id,
+      fname: updateUser.fname,
+      lname: updateUser.lname,
+      email: updateUser.email,
+      userName: updateUser.userName,
+      followers: updateUser.followers,
+      following: updateUser.following,
+      postsCount: updateUser.postsCount,
+      pic: updateUser.pic,
+      about: updateUser.about,
+    });
+
+    console.log(updateUser);
+  } else {
+    res.status(400).json({
+      error: "Update Failed",
+    });
+    throw new error("User not updated !!!");
+  }
 });
 
-const deleteUser = asyncHandler(async(req,res)=>{
+const deleteUser = asyncHandler(async (req, res) => {
+  const { _id } = req.body;
 
-  const{_id} = req.body;
-
-  if(!_id){
+  if (!_id) {
     console.log("Id is null".red.bold);
     res.status(400).json({
       error: "User id is null",
     });
     throw new error("Error while deleting shop !!!");
-  }
-  else{
+  } else {
     try {
       const user = await User.findOneAndDelete({ _id: _id });
 
@@ -198,17 +194,33 @@ const deleteUser = asyncHandler(async(req,res)=>{
       }
     } catch (error) {
       res.status(400).json({
-        error:"Fail to delete account !!!"
+        error: "Fail to delete account !!!",
       });
       throw new error("Error while deleting shop !!!" + error.message);
     }
   }
-})
+});
 
+const searchUser = asyncHandler(async (req, res) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { fname: { $regex: req.query.search, $options: "i" } },
+          { lname: { $regex: req.query.search, $options: "i" } },
+          { userName: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
+
+  const products = await User.find(keyword);
+  console.log(products);
+  res.send(products);
+});
 module.exports = {
   registerUser,
   authUser,
   getSingleUser,
   updateUser,
   deleteUser,
+  searchUser,
 };
