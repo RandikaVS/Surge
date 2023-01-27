@@ -92,7 +92,7 @@ function LoginPage() {
           },
         };
         const { data } = await axios.post(
-          "http://localhost:5000/api/user/login",
+          "/api/user/login",
           {
             email,
             password,
@@ -253,7 +253,23 @@ function LoginPage() {
           sx={{
             backgroundColor: "white",
           }}
-        />
+        >
+          <h1 style={{ fontWeight: "bold", marginTop: "200px" }}>
+            Surge SE Internship
+          </h1>
+          <h2
+            style={{
+              fontWeight: "lighter",
+              marginRight: "160px",
+              marginTop: "-20px",
+            }}
+          >
+            March 2023
+          </h2>
+          <h1 style={{ fontWeight: "bold", marginRight: "50px" }}>
+            Sahan Randika
+          </h1>
+        </Grid>
       </Grid>
     </ThemeProvider>
   );

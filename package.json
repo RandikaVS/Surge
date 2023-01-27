@@ -9,6 +9,7 @@
   "author": "Sahan Randika",
   "license": "ISC",
   "dependencies": {
+    "@clerk/clerk-react": "^4.9.0",
     "axios": "^1.2.1",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
