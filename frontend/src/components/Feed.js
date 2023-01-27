@@ -2,92 +2,57 @@ import React from "react";
 import Post from "./Post";
 import "./Feed.css";
 import { useEffect, useState } from "react";
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default function Feed() {
   const [postList, setPostList] = useState([]);
 
-  let postData = [
-    {
-      id: "12345",
-      userName: "Sahan",
-      userImage:
-        "https://res.cloudinary.com/cake-lounge/image/upload/v1674555614/219983_fbpdqr.png",
-      imgUrl:
-        "https://res.cloudinary.com/cake-lounge/image/upload/v1663143045/WilludaInn/samantha-gades-fIHozNWfcvs-unsplash_l6xerk.jpg",
-      timestamp: "1234",
-      likes: "1245",
-    },
-    {
-      id: "12345",
-      userName: "Sahan",
-      userImage:
-        "https://res.cloudinary.com/cake-lounge/image/upload/v1674555614/219983_fbpdqr.png",
-      imgUrl:
-        "https://res.cloudinary.com/cake-lounge/image/upload/v1663143045/WilludaInn/samantha-gades-fIHozNWfcvs-unsplash_l6xerk.jpg",
-      timestamp: "1234",
-      likes: "1245",
-    },
-    {
-      id: "12345",
-      userName: "Sahan",
-      userImage:
-        "https://res.cloudinary.com/cake-lounge/image/upload/v1674555614/219983_fbpdqr.png",
-      imgUrl:
-        "https://res.cloudinary.com/cake-lounge/image/upload/v1663143045/WilludaInn/samantha-gades-fIHozNWfcvs-unsplash_l6xerk.jpg",
-      timestamp: "1234",
-      likes: "1245",
-    },
-    {
-      id: "12345",
-      userName: "Sahan",
-      userImage:
-        "https://res.cloudinary.com/cake-lounge/image/upload/v1674555614/219983_fbpdqr.png",
-      imgUrl:
-        "https://res.cloudinary.com/cake-lounge/image/upload/v1663143045/WilludaInn/samantha-gades-fIHozNWfcvs-unsplash_l6xerk.jpg",
-      timestamp: "1234",
-      likes: "1245",
-    },
-    {
-      id: "12345",
-      userName: "Sahan",
-      userImage:
-        "https://res.cloudinary.com/cake-lounge/image/upload/v1674555614/219983_fbpdqr.png",
-      imgUrl:
-        "https://res.cloudinary.com/cake-lounge/image/upload/v1663143045/WilludaInn/samantha-gades-fIHozNWfcvs-unsplash_l6xerk.jpg",
-      timestamp: "1234",
-      likes: "1245",
-    },
-    {
-      id: "12345",
-      userName: "Sahan",
-      userImage:
-        "https://res.cloudinary.com/cake-lounge/image/upload/v1674555614/219983_fbpdqr.png",
-      imgUrl:
-        "https://res.cloudinary.com/cake-lounge/image/upload/v1663143045/WilludaInn/samantha-gades-fIHozNWfcvs-unsplash_l6xerk.jpg",
-      timestamp: "1234",
-      likes: "1245",
-    },
-    {
-      id: "12345",
-      userName: "Sahan",
-      userImage:
-        "https://res.cloudinary.com/cake-lounge/image/upload/v1674555614/219983_fbpdqr.png",
-      imgUrl:
-        "https://res.cloudinary.com/cake-lounge/image/upload/v1663143045/WilludaInn/samantha-gades-fIHozNWfcvs-unsplash_l6xerk.jpg",
-      timestamp: "1234",
-      likes: "1245",
-    },
-  ];
+  const getAllPosts = async(event)=>{
+    
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.post(
+        "/api/post/getAllPosts",{},
+        config
+      );
+      console.log(data);
+      setPostList(data.postList);
+      localStorage.setItem("allPosts", JSON.stringify(data));
+
+    } catch (error) {
+      console.log(error.response.data.error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.response.data.error,
+      });
+    }
+
+  }
 
   useEffect(() => {
-    setPostList(postData);
+    getAllPosts();
   }, []);
 
   return (
     <div className="screllable_feed">
-      {postList.map((item) => (
-        <Post data={item} />
-      ))}
+    {postList?(
+      <div>
+        {postList.map((item) => (
+            <Post data={item}/>
+          ))}
+      </div>
+    ):(
+      <div>
+        Loading...
+      </div>
+    )}
+      
     </div>
   );
 }

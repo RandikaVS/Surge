@@ -79,8 +79,12 @@ const authUser = asyncHandler(async (req, res) => {
       fname: user.fname,
       lname: user.lname,
       email: user.email,
+      followers:user.followers,
+      following:user.following,
+      postsCount:user.postsCount,
       pic: user.pic,
       about: user.about,
+      userName:user.userName,
       token: genarateToken(user._id),
     });
   } else {
@@ -124,8 +128,11 @@ const getSingleUser = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
 
   const { fname, lname, email, _id, pic, about } = req.body;
+
   if (!fname || !lname || !email || !_id) {
-    res.send(400);
+    res.send(400).json({
+      error: "Please enter all the fields!!!",
+    });
     throw new error("Please enter all the fields!!!");
   }
 
@@ -154,7 +161,7 @@ const updateUser = asyncHandler(async (req, res) => {
         userName: updateUser.userName,
         followers: updateUser.followers,
         following: updateUser.following,
-        postCount: updateUser.postCount,
+        postsCount: updateUser.postsCount,
         pic: updateUser.pic,
         about: updateUser.about,
       });
@@ -168,9 +175,40 @@ const updateUser = asyncHandler(async (req, res) => {
     }
 });
 
+const deleteUser = asyncHandler(async(req,res)=>{
+
+  const{_id} = req.body;
+
+  if(!_id){
+    console.log("Id is null".red.bold);
+    res.status(400).json({
+      error: "User id is null",
+    });
+    throw new error("Error while deleting shop !!!");
+  }
+  else{
+    try {
+      const user = await User.findOneAndDelete({ _id: _id });
+
+      if (user) {
+        res.status(201).json({
+          _id: _id,
+        });
+        console.log("Account deleted".red.bold);
+      }
+    } catch (error) {
+      res.status(400).json({
+        error:"Fail to delete account !!!"
+      });
+      throw new error("Error while deleting shop !!!" + error.message);
+    }
+  }
+})
+
 module.exports = {
   registerUser,
   authUser,
   getSingleUser,
   updateUser,
+  deleteUser,
 };

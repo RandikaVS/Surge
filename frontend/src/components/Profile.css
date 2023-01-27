@@ -50,3 +50,10 @@ font-weight: bold;
     margin-top: 50px;
     margin-bottom: 50px;
 }
+
+.edit_form{
+    max-height: 99vh;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+}
