@@ -1,5 +1,6 @@
 const { json } = require("express");
 
+//error handling for not found url
 const notFound = (req, res, next) => {
   const error = new Error(`NoT Found - ${req.originalUrl}`);
   res.status(404);

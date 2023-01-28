@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+//creating [post] modal
 const postSchema = mongoose.Schema(
   {
     userId: { type: "String", required: true },

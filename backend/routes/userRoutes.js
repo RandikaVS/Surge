@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+
+//importing all controller functions
 const {
   registerUser,
   authUser,
@@ -10,6 +12,7 @@ const {
 } = require("../controllers/userControllers");
 const { protect } = require("../middleware/authMiddleware");
 
+//routing all end points
 router.route("/").post(registerUser).get(protect);
 router.route("/login").post(authUser);
 router.route("/getSingleUser").post(protect, getSingleUser);

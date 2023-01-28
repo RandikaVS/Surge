@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
+//create user modal
 const userSchema = mongoose.Schema(
   {
     fname: { type: "String", required: true },
@@ -28,10 +29,13 @@ const userSchema = mongoose.Schema(
   }
 );
 
+//password mating function
 userSchema.methods.matchPassword = async function (enteredPassword) {
+  //compare user give password encrypted password
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
+//encrypting password using bcryptjs before saving data to database
 userSchema.pre("save", async function (next) {
   if (!this.isModified) {
     next();
