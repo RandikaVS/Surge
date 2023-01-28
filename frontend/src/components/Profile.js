@@ -25,10 +25,11 @@ import Snackbar from "@mui/material/Snackbar";
 import { useHistory } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 import Tooltip from "@mui/material/Tooltip";
+import Paper from "@mui/material/Paper";
 
 function Profile() {
   const [spacing, setSpacing] = React.useState(2);
-  const [postList, setPostList] = React.useState();
+  const [postList, setPostList] = React.useState([]);
   const [editState, setEditState] = React.useState(false);
   const history = useHistory();
 
@@ -53,6 +54,7 @@ function Profile() {
 
   useEffect(() => {
     setUserId(loginData._id);
+    getUserPosts();
   }, []);
 
   const Alert = React.forwardRef(function Alert(props, ref) {
@@ -61,6 +63,7 @@ function Profile() {
 
   const changeState = () => {
     setEditState(false);
+    
   };
 
   const handleClose = (event, reason) => {
@@ -233,6 +236,33 @@ function Profile() {
       }
     });
   };
+
+  const getUserPosts = async()=>{
+     try {
+       const config = {
+         headers: {
+           "Content-type": "application/json",
+           Authorization: `Bearer ${loginData.token}`,
+         },
+       };
+       const { data } = await axios.post(
+        "/api/post/getUserPosts",
+        {
+          _id,
+        }, 
+        config
+        );
+        setPostList(data)
+       console.log(data.array);
+     } catch (error) {
+       console.log(error.response.data.error);
+       Swal.fire({
+         icon: "error",
+         title: "Oops...",
+         text: error.response.data.error,
+       });
+     }
+  }
 
   if (!loginData) {
     return (
@@ -498,13 +528,13 @@ function Profile() {
 
         <Grid item xs={12} className="post_section">
           <Grid container justifyContent="center" spacing={spacing}>
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((value) => (
+            {postList.map((value) => (
               <Grid key={value} item>
-                <Card sx={{ maxWidth: 300 }}>
+                <Card sx={{ maxWidth: 200 }}>
                   <CardMedia
                     component="img"
                     height="194"
-                    image="https://res.cloudinary.com/cake-lounge/image/upload/v1663143045/WilludaInn/samantha-gades-fIHozNWfcvs-unsplash_l6xerk.jpg"
+                    image={value.image}
                     alt="Paella dish"
                   />
 
@@ -522,6 +552,7 @@ function Profile() {
             ))}
           </Grid>
         </Grid>
+
         <br></br>
         <br></br>
       </div>

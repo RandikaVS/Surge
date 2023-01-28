@@ -6,12 +6,14 @@ const app = express();
 require("dotenv").config({ path: "./config.env" });
 const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoute");
-
-const connectDB = require("./DB/db");
 const { errorHandler, notFound } = require("./middleware/errorMiddleware");
+
+//build database connection
+const connectDB = require("./DB/db");
 dotenv.config();
 connectDB();
 
+//getting port number
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
@@ -21,6 +23,7 @@ app.get("/", (req, res) => {
   res.send("Api is running");
 });
 
+//server starting to listning
 const server = app.listen(
   PORT,
   console.log(`Server running on PORT ${PORT}...`.yellow.bold)

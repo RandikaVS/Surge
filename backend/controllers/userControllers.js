@@ -1,19 +1,25 @@
+//importing modals and required files
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModal");
 const { green } = require("colors");
 const genarateToken = require("../config/genarateToken");
 
+//user register function
 const registerUser = asyncHandler(async (req, res) => {
+  //getting body data
   const { fname, lname, email, userName, password } = req.body;
 
+  //backend validation for body data
   if (!fname || !lname || !email || !userName || !password) {
     res.send(400);
     throw new error("Please enter all the fields!!!");
   }
 
+  //find if user exist with email and user name
   const userExist = await User.findOne({ email });
   const userNameExist = await User.findOne({ userName });
 
+  //sending error message if user exist
   if (userExist) {
     console.log("User already exist!!!".red.bold);
     res.status(400).json({
@@ -21,6 +27,7 @@ const registerUser = asyncHandler(async (req, res) => {
     });
     throw new error("User already exist!!!");
   }
+  //sending error message if user exist
   if (userNameExist) {
     console.log("User name already exist!!!".red.bold);
     res.status(400).json({
@@ -29,6 +36,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new error("User name already exist!!!");
   }
 
+  //create new user in database
   const user = await User.create({
     fname,
     lname,
@@ -37,6 +45,7 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
   });
 
+  //send response to frontend
   if (user) {
     console.log("Registered!!!".green.bold);
     res.status(201).json({
@@ -51,6 +60,7 @@ const registerUser = asyncHandler(async (req, res) => {
       token: genarateToken(user._id),
     });
   } else {
+    //send error message to frontend
     console.log("Failed to Register User !!!".red.bold);
     res.status(400).json({
       error: "Failed to Register User !!!",
@@ -59,13 +69,17 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
+//user authenticate
 const authUser = asyncHandler(async (req, res) => {
   console.log("back end called".red.bold);
 
+  //getting body data
   const { email, password } = req.body;
 
+  //check if user available in database
   const user = await User.findOne({ email });
 
+  //send error message if user is not in db
   if (!user) {
     res.status(400).json({
       error: "This email not registered yet !!!",
@@ -73,6 +87,7 @@ const authUser = asyncHandler(async (req, res) => {
     throw new error("This email not registered yet !!!");
   }
 
+  //if user available send response with matching password and genarate JWT token using user id
   if (user && (await user.matchPassword(password))) {
     res.json({
       _id: user._id,
@@ -88,6 +103,7 @@ const authUser = asyncHandler(async (req, res) => {
       token: genarateToken(user._id),
     });
   } else {
+    //send error message to frontend
     console.log("Invalid email or Password".red.bold);
     res.status(400).json({
       error: "Incorrect password !!!",
@@ -96,11 +112,15 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
+//getting single user details
 const getSingleUser = asyncHandler(async (req, res) => {
+  //getting body data
   const { _id } = req.body;
-  console.log(_id, "user id");
+
+  //find user in database 
   const user = await User.findOne({ _id: _id });
 
+  //send user data if user is available is db
   if (user) {
     res.json({
       _id: user._id,
@@ -117,6 +137,7 @@ const getSingleUser = asyncHandler(async (req, res) => {
     });
     console.log(user);
   } else {
+    //send error message
     console.log("Error fetching user".red.bold);
     res.status(401).json({
       error: "cannot find user",
@@ -125,9 +146,12 @@ const getSingleUser = asyncHandler(async (req, res) => {
   }
 });
 
+//user update
 const updateUser = asyncHandler(async (req, res) => {
+  //getting body data
   const { fname, lname, email, _id, pic, about } = req.body;
 
+  //backend validation for required data
   if (!fname || !lname || !email || !_id) {
     res.send(400).json({
       error: "Please enter all the fields!!!",
@@ -135,6 +159,7 @@ const updateUser = asyncHandler(async (req, res) => {
     throw new error("Please enter all the fields!!!");
   }
 
+  //find user by id and update given data
   const updateUser = await User.findByIdAndUpdate(
     _id,
     {
@@ -149,6 +174,7 @@ const updateUser = asyncHandler(async (req, res) => {
     }
   );
 
+  //send success response to frontend
   if (updateUser) {
     console.log("Updated!!!".green.bold);
     res.status(201).json({
@@ -167,6 +193,7 @@ const updateUser = asyncHandler(async (req, res) => {
 
     console.log(updateUser);
   } else {
+    //send fail response to frontend
     res.status(400).json({
       error: "Update Failed",
     });
@@ -174,9 +201,12 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
+//deleting user
 const deleteUser = asyncHandler(async (req, res) => {
+  //getting user id from body data
   const { _id } = req.body;
 
+  //check if id is null
   if (!_id) {
     console.log("Id is null".red.bold);
     res.status(400).json({
@@ -185,8 +215,10 @@ const deleteUser = asyncHandler(async (req, res) => {
     throw new error("Error while deleting shop !!!");
   } else {
     try {
+      //find user by id and delete fron database
       const user = await User.findOneAndDelete({ _id: _id });
 
+      //send success response message to the frontend
       if (user) {
         res.status(201).json({
           _id: _id,
@@ -194,6 +226,7 @@ const deleteUser = asyncHandler(async (req, res) => {
         console.log("Account deleted".red.bold);
       }
     } catch (error) {
+      //send error response message to the frontend
       res.status(400).json({
         error: "Fail to delete account !!!",
       });
@@ -202,21 +235,28 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 });
 
+
+//search user by keywords
 const searchUser = asyncHandler(async (req, res) => {
+  //getting keyword 
   const keyword = req.query.search
     ? {
         $or: [
-          { fname: { $regex: req.query.search, $options: "i" } },
-          { lname: { $regex: req.query.search, $options: "i" } },
-          { userName: { $regex: req.query.search, $options: "i" } },
+          { fname: { $regex: req.query.search, $options: "i" } }, //assign keyword find in user first name
+          { lname: { $regex: req.query.search, $options: "i" } }, //assign keyword find in user last name
+          { userName: { $regex: req.query.search, $options: "i" } }, //assign keyword find in user user name
         ],
       }
     : {};
 
-  const products = await User.find(keyword);
-  console.log(products);
-  res.send(products);
+//find user in databse by keyword
+  const user = await User.find(keyword);
+  console.log(user);
+  //send data to frontend
+  res.send(user);
 });
+
+//exporting all fucntions
 module.exports = {
   registerUser,
   authUser,
