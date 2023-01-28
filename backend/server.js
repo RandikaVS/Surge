@@ -7,11 +7,13 @@ require("dotenv").config({ path: "./config.env" });
 const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoute");
 const { errorHandler, notFound } = require("./middleware/errorMiddleware");
+const mongoose = require("mongoose");
 
 //build database connection
 const connectDB = require("./DB/db");
 dotenv.config();
 connectDB();
+
 
 //getting port number
 const PORT = process.env.PORT || 5000;

@@ -10,6 +10,7 @@ import VisitorProfile from "../components/VisitorProfile";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
+import Avatar from "@mui/material/Avatar";
 
 const HomePage = () => {
   const { selectedUser, setSelectedUser } = UserState();
@@ -97,7 +98,11 @@ const HomePage = () => {
             md={3}
             sx={{ backgroundColor: "whitesmoke", display: item3Display }}
           >
-            item3
+            <Avatar
+              alt="Remy Sharp"
+              src="https://res.cloudinary.com/cake-lounge/image/upload/v1674887301/surge_image_xveqpt.png"
+              sx={{marginLeft:"100px",marginTop:"100px", width:'100px',height:'100px'}}
+            />
           </Grid>
         </Grid>
       </div>
