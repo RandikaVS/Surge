@@ -22,16 +22,14 @@ import ReCAPTCHA from "react-google-recaptcha";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
-
 const theme = createTheme();
 
 function LoginPage() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [showPassword, setShowPassword] = useState(false);
-  const[capcha, setCapcha] = useState(false);
-   const [open, setOpen] = useState(false);
-
+  const [capcha, setCapcha] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const history = useHistory();
 
@@ -58,7 +56,7 @@ function LoginPage() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    if(!capcha){
+    if (!capcha) {
       setOpen(true);
     }
 
@@ -127,7 +125,6 @@ function LoginPage() {
       }
     }
   };
-
 
   return (
     <ThemeProvider theme={theme}>
@@ -245,6 +242,7 @@ function LoginPage() {
             </Box>
           </Box>
         </Grid>
+
         <Grid
           item
           xs={false}
@@ -254,7 +252,7 @@ function LoginPage() {
             backgroundColor: "white",
           }}
         >
-          <h1 style={{ fontWeight: "bold", marginTop: "200px" }}>
+          <h1 style={{ fontWeight: "bold", marginTop: "200px" }} id="banner_id">
             Surge SE Internship
           </h1>
           <h2
@@ -266,7 +264,7 @@ function LoginPage() {
           >
             March 2023
           </h2>
-          <h1 style={{ fontWeight: "bold", marginRight: "50px" }}>
+          <h1 style={{ fontWeight: "bold", marginRight: "50px" }} id="banner_name">
             Sahan Randika
           </h1>
         </Grid>

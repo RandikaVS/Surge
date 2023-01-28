@@ -78,18 +78,16 @@ const authUser = asyncHandler(async (req, res) => {
 
   //check if user available in database
   const user = await User.findOne({ email });
-
-  //send error message if user is not in db
-  if (!user) {
-    res.status(400).json({
-      error: "This email not registered yet !!!",
-    });
-    throw new error("This email not registered yet !!!");
+  if(!email){
+    return res.status(400).send({ message: "Invalid Email" });
   }
+  if (!(await user.matchPassword(password)))
+    return res.status(400).send({ message: "Incorrect Password " });
+
 
   //if user available send response with matching password and genarate JWT token using user id
   if (user && (await user.matchPassword(password))) {
-    res.json({
+    res.status(200).json({
       _id: user._id,
       fname: user.fname,
       lname: user.lname,
@@ -117,7 +115,7 @@ const getSingleUser = asyncHandler(async (req, res) => {
   //getting body data
   const { _id } = req.body;
 
-  //find user in database 
+  //find user in database
   const user = await User.findOne({ _id: _id });
 
   //send user data if user is available is db
@@ -235,10 +233,9 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 });
 
-
 //search user by keywords
 const searchUser = asyncHandler(async (req, res) => {
-  //getting keyword 
+  //getting keyword
   const keyword = req.query.search
     ? {
         $or: [
@@ -249,7 +246,7 @@ const searchUser = asyncHandler(async (req, res) => {
       }
     : {};
 
-//find user in databse by keyword
+  //find user in databse by keyword
   const user = await User.find(keyword);
   console.log(user);
   //send data to frontend
